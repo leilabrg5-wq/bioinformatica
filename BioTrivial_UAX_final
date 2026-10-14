@@ -1,0 +1,457 @@
+# BIOTRIVIAL UAX
+
+def bienvenida():
+    print("====================================")
+    print("         BIOTRIVIAL UAX  ")
+    print("====================================")
+    print("¡Bienvenidos a BioTrivial UAX!")
+    print("¡Que gane el mejor biomédico!")
+    print("====================================")
+
+import random
+import unicodedata
+
+from IPython.display import Image, display
+
+def mostrar_tablero():
+    print("\n ESTE ES EL TABLERO")
+    display(Image(filename="IMG_2875.jpeg"))
+
+import matplotlib.pyplot as plt
+from PIL import Image as PILImage
+
+# Coordenadas de las casillas (proporcionales a la imagen)
+coordenadas = [
+    (0.095, 0.13),  # INICIO
+    (0.245, 0.13),  # 1
+    (0.395, 0.13),  # 2
+    (0.545, 0.13),  # 3
+    (0.695, 0.13),  # 4
+    (0.845, 0.13),  # 5
+
+    (0.79, 0.30),   # 6
+    (0.63, 0.30),   # 7
+    (0.48, 0.30),   # 8
+    (0.33, 0.30),   # 9
+    (0.175, 0.30),  # 10
+
+    (0.095, 0.47),  # 11
+    (0.245, 0.47),  # 12
+    (0.395, 0.47),  # 13
+    (0.545, 0.47),  # 14
+    (0.695, 0.47),  # 15
+    (0.845, 0.47),  # 16
+
+    (0.79, 0.64),   # 17
+    (0.63, 0.64),   # 18
+    (0.48, 0.64),   # 19
+    (0.33, 0.64),   # 20
+    (0.175, 0.64),  # 21
+
+    (0.245, 0.83),  # 22
+    (0.395, 0.83),  # 23
+    (0.545, 0.83),  # 24
+    (0.695, 0.83),  # 25
+    (0.845, 0.83)   # FINAL
+]
+
+
+def mostrar_fichas(posiciones, jugadores):
+
+    # Abrir imagen original
+    imagen = PILImage.open("IMG_2875.jpeg")
+
+    # Crear figura
+    fig, ax = plt.subplots(figsize=(12, 10))
+    ax.imshow(imagen)
+
+    colores = ["blue", "black"]
+
+    # Dibujar las dos fichas
+    for i in range(2):
+
+        x, y = coordenadas[posiciones[i]]
+
+        # Convertir coordenadas proporcionales a píxeles
+        x = x * imagen.width
+        y = y * imagen.height
+
+        # Separar fichas cuando coinciden
+        x = x + (-25 if i == 0 else 25)
+
+        ax.scatter(
+            x, y,
+            s=950,
+            color=colores[i],
+            edgecolors="white",
+            linewidths=3,
+            zorder=5
+        )
+
+        ax.text(
+            x, y, str(i + 1),
+            color="white",
+            ha="center",
+            va="center",
+            fontsize=13,
+            fontweight="bold",
+            zorder=6
+        )
+
+    ax.axis("off")
+    plt.show()
+
+    print("🔵", jugadores[0], "- Casilla:", posiciones[0])
+    print("⚫", jugadores[1], "- Casilla:", posiciones[1])
+
+# Colores de las 25 casillas
+tablero = [
+    "azul", "verde", "rojo", "amarillo", "morado",
+    "azul", "verde", "rojo", "amarillo", "morado",
+    "azul", "verde", "rojo", "amarillo", "morado",
+    "azul", "verde", "rojo", "amarillo", "morado",
+    "azul", "verde", "rojo", "amarillo", "morado"
+]
+
+# Categorías
+categorias = {
+    "azul": "Genética",
+    "verde": "Fisiopatología",
+    "amarillo": "Biología celular y molecular",
+    "rojo": "Microbiología",
+    "morado": "Farmacología"
+}
+
+# Casilla final
+FIN = 26
+
+def registrar_jugadores():
+    print("\n JUGADORES")
+
+    jugador1 = input("Nombre del jugador 1:").strip()
+    jugador2 = input("Nombre del jugador 2:").strip()
+
+    if jugador1 == "":
+        jugador1 = "Jugador 1"
+
+    if jugador2 == "":
+        jugador2 = "Jugador 2"
+
+    print("\n¡Perfecto! Los jugadores son:")
+    print("Jugador 1:", jugador1)
+    print("Jugador 2:", jugador2)
+
+    return jugador1, jugador2
+
+
+preguntas = {
+    "Genética": [
+        {"pregunta": "¿Qué molécula contiene la información genética?", "respuesta": "ADN"},
+        {"pregunta": "¿Cuántos cromosomas tiene una célula somática humana normal?", "respuesta": "46"},
+        {"pregunta": "¿Qué base se empareja con la adenina en el ADN?", "respuesta": "timina"},
+        {"pregunta": "¿Qué enzima sintetiza ADN?", "respuesta": "ADN polimerasa"},
+        {"pregunta": "¿Qué técnica amplifica fragmentos de ADN?", "respuesta": "PCR"},
+        {"pregunta": "¿Cómo se llama la división celular que produce gametos?", "respuesta": "meiosis"},
+        {"pregunta": "¿Cuántos cromosomas tiene un gameto humano normal?", "respuesta": "23"},
+        {"pregunta": "¿Qué molécula lleva la información genética al ribosoma?", "respuesta": "ARNm"},
+        {"pregunta": "¿Qué síndrome está asociado a la trisomía 21?", "respuesta": "Down"},
+        {"pregunta": "¿Qué tipo de mutación cambia una sola base del ADN?", "respuesta": "puntual"}
+    ],
+
+    "Fisiopatología": [
+        {"pregunta": "¿Cómo se llama el aumento de temperatura corporal?", "respuesta": "fiebre"},
+        {"pregunta": "¿Qué enfermedad se caracteriza por hiperglucemia crónica?", "respuesta": "diabetes"},
+        {"pregunta": "¿Qué órgano produce insulina?", "respuesta": "páncreas"},
+        {"pregunta": "¿Cómo se llama la falta de oxígeno en los tejidos?", "respuesta": "hipoxia"},
+        {"pregunta": "¿Qué enfermedad causa obstrucción variable de las vías respiratorias?", "respuesta": "asma"},
+        {"pregunta": "¿Cómo se llama la muerte celular programada?", "respuesta": "apoptosis"},
+        {"pregunta": "¿Qué células transportan oxígeno en sangre?", "respuesta": "eritrocitos"},
+        {"pregunta": "¿Qué hormona disminuye la glucosa sanguínea?", "respuesta": "insulina"},
+        {"pregunta": "¿Cómo se llama una frecuencia cardíaca elevada?", "respuesta": "taquicardia"},
+        {"pregunta": "¿Qué órgano se ve afectado principalmente en la cirrosis?", "respuesta": "hígado"}
+    ],
+
+    "Biología celular y molecular": [
+        {"pregunta": "¿Qué orgánulo produce la mayor parte del ATP?", "respuesta": "mitocondria"},
+        {"pregunta": "¿Dónde se encuentra el ADN nuclear?", "respuesta": "núcleo"},
+        {"pregunta": "¿Dónde se sintetizan las proteínas?", "respuesta": "ribosomas"},
+        {"pregunta": "¿Qué estructura regula el paso de sustancias?", "respuesta": "membrana plasmática"},
+        {"pregunta": "¿Qué orgánulo modifica y empaqueta proteínas?", "respuesta": "aparato de Golgi"},
+        {"pregunta": "¿Qué orgánulos contienen enzimas digestivas?", "respuesta": "lisosomas"},
+        {"pregunta": "¿Qué división produce dos células hijas?", "respuesta": "mitosis"},
+        {"pregunta": "¿Cuál es la principal molécula energética celular?", "respuesta": "ATP"},
+        {"pregunta": "¿Cómo se llama la síntesis de ARN a partir de ADN?", "respuesta": "transcripción"},
+        {"pregunta": "¿Cómo se llama la síntesis de proteínas a partir de ARNm?", "respuesta": "traducción"}
+    ],
+
+    "Microbiología": [
+        {"pregunta": "¿Qué agente infeccioso necesita células para replicarse?", "respuesta": "virus"},
+        {"pregunta": "¿Qué microorganismos son procariotas?", "respuesta": "bacterias"},
+        {"pregunta": "¿Qué microorganismo causa la candidiasis?", "respuesta": "hongo"},
+        {"pregunta": "¿Qué bacteria causa la tuberculosis?", "respuesta": "Mycobacterium tuberculosis"},
+        {"pregunta": "¿Qué tinción distingue bacterias Gram positivas y negativas?", "respuesta": "Gram"},
+        {"pregunta": "¿Qué bacteria causa frecuentemente infecciones urinarias?", "respuesta": "Escherichia coli"},
+        {"pregunta": "¿Qué tipo de agente es el VIH?", "respuesta": "virus"},
+        {"pregunta": "¿Qué parásito causa el paludismo?", "respuesta": "Plasmodium"},
+        {"pregunta": "¿Qué estructuras bacterianas facilitan la adhesión?", "respuesta": "fimbrias"},
+        {"pregunta": "¿Qué proceso elimina todos los microorganismos, incluidas las esporas?", "respuesta": "esterilización"}
+    ],
+
+    "Farmacología": [
+        {"pregunta": "¿Cómo se llama la sustancia activa de un medicamento?", "respuesta": "principio activo"},
+        {"pregunta": "¿Qué siglas resumen los procesos farmacocinéticos?", "respuesta": "ADME"},
+        {"pregunta": "¿Qué significa la A de ADME?", "respuesta": "absorción"},
+        {"pregunta": "¿Qué órgano metaboliza muchos fármacos?", "respuesta": "hígado"},
+        {"pregunta": "¿Qué órganos eliminan muchos fármacos por la orina?", "respuesta": "riñones"},
+        {"pregunta": "¿Cómo se llama un fármaco que activa un receptor?", "respuesta": "agonista"},
+        {"pregunta": "¿Cómo se llama un fármaco que bloquea un receptor?", "respuesta": "antagonista"},
+        {"pregunta": "¿Qué vía administra un fármaco directamente en una vena?", "respuesta": "intravenosa"},
+        {"pregunta": "¿Qué analgésico también se utiliza para reducir la fiebre?", "respuesta": "paracetamol"},
+        {"pregunta": "¿Qué medicamentos tratan infecciones bacterianas?", "respuesta": "antibióticos"}
+    ]
+}
+
+# Mensajes para respuestas correctas
+mensajes_correctos = [
+    "¡Bien hecho! Se nota que has estudiado.",
+    "¡Einstein estaría orgulloso de ti!",
+    "¡La inteligencia te persigue y hoy te ha alcanzado!",
+    "¡Futuro premio Nobel de Biomedicina!",
+    "¡Sobrado!",
+    "¡Tus neuronas están trabajando horas extra!",
+    "¡Matrícula de honor!",
+    "¡Vas más rápido que una PCR bien optimizada!",
+    "¡Se nota quién presta atención en clase!",
+    "¡Olé esas neuronas! ¡Sigue así!"
+]
+
+# Mensajes para respuestas incorrectas
+mensajes_incorrectos = [
+    "A ver si nos ponemos a estudiar un poquito ya...",
+    "Las neuronas han pedido la baja laboral.",
+    "¿Tú seguro que estudias Biomedicina?",
+    "La UAX quiere tener una conversación contigo.",
+    "Cerebro no encontrado. Error 404.",
+    "Los apuntes no muerden, puedes abrirlos.",
+    "Tu profesor acaba de sentir un escalofrío.",
+    "Menos café y más estudiar.",
+    "Emergencia académica.",
+    "La respuesta estaba en los apuntes que no abriste.",
+    "Esa neurona acaba de abandonar el chat."
+]
+
+# Normalizar respuestas
+def normalizar_respuesta(texto):
+    texto = texto.strip().lower()
+    texto = unicodedata.normalize("NFD", texto)
+
+    texto = "".join(
+        letra for letra in texto
+        if unicodedata.category(letra) != "Mn"
+    )
+
+    return texto
+
+
+# Preparar preguntas sin repeticiones
+def preparar_preguntas():
+    preguntas_disponibles = {}
+
+    for categoria, lista in preguntas.items():
+        preguntas_disponibles[categoria] = lista.copy()
+        random.shuffle(preguntas_disponibles[categoria])
+
+    return preguntas_disponibles
+
+
+# Hacer una pregunta
+def hacer_pregunta(categoria, preguntas_disponibles):
+
+    if not preguntas_disponibles[categoria]:
+        preguntas_disponibles[categoria] = preguntas[categoria].copy()
+        random.shuffle(preguntas_disponibles[categoria])
+
+    pregunta_elegida = preguntas_disponibles[categoria].pop()
+
+    print("\nCATEGORÍA:", categoria)
+
+    respuesta_jugador = input(
+        pregunta_elegida["pregunta"] + "\nTu respuesta: "
+    )
+
+    respuesta_correcta = pregunta_elegida["respuesta"]
+
+    if normalizar_respuesta(respuesta_jugador) == normalizar_respuesta(respuesta_correcta):
+
+        print("\n" + random.choice(mensajes_correctos))
+        return True
+
+    else:
+        print("\n" + random.choice(mensajes_incorrectos))
+        print("La respuesta correcta era:", respuesta_correcta)
+        return False
+
+# Lanzar el dado
+def lanzar_dado():
+    dado = random.randint(1, 6)
+    print("Has sacado un", dado)
+    return dado
+
+# Mover al jugador
+def mover_jugador(posicion, dado):
+    nueva_posicion = posicion + dado
+
+    if nueva_posicion > FIN:
+        print("¡Te has pasado de la casilla FINAL!")
+        print("Necesitas el número exacto para ganar.")
+        return posicion
+
+    return nueva_posicion
+
+def jugar():
+
+    # Bienvenida y tablero
+    bienvenida()
+    mostrar_tablero()
+
+    # Registrar jugadores
+    jugador1, jugador2 = registrar_jugadores()
+    jugadores = [jugador1, jugador2]
+
+    # Posiciones iniciales
+    posiciones = [0, 0]
+
+    # Preparar preguntas
+    preguntas_disponibles = preparar_preguntas()
+
+    turno = 0
+
+    print("\n¡COMIENZA BIOTRIVIAL UAX!")
+
+    # Mostrar las fichas en INICIO
+    mostrar_fichas(posiciones, jugadores)
+
+    while True:
+
+        jugador = jugadores[turno]
+
+        print("\n================================")
+        print("Turno de:", jugador)
+        print("Posición actual:", posiciones[turno])
+
+        # Si el jugador ya está en FINAL
+        if posiciones[turno] == FIN:
+
+            print("\n¡Ya estás en la casilla FINAL!")
+            print("¡Tienes otra oportunidad para ganar!")
+
+            categoria_final = random.choice(
+                list(categorias.values())
+            )
+
+            print("Categoría final:", categoria_final)
+
+            correcta = hacer_pregunta(
+                categoria_final,
+                preguntas_disponibles
+            )
+
+            if correcta:
+                print("\n¡ENHORABUENA,", jugador, "!")
+                print("¡HAS GANADO BIOTRIVIAL UAX!")
+                print("¡Tus neuronas merecen unas vacaciones!")
+                break
+
+            else:
+                print("¡Otra vez será!")
+                turno = (turno + 1) % 2
+                continue
+
+        # Lanzar el dado
+        input("\nPulsa ENTER para lanzar el dado...")
+
+        dado = lanzar_dado()
+
+        posicion_anterior = posiciones[turno]
+
+        nueva_posicion = mover_jugador(
+            posicion_anterior,
+            dado
+        )
+
+        # Comprobar si ha llegado a FINAL
+        if nueva_posicion == FIN:
+
+            posiciones[turno] = FIN
+
+            # Mover la ficha a FINAL
+            mostrar_fichas(posiciones, jugadores)
+
+            print("\n¡HAS LLEGADO A LA CASILLA FINAL!")
+            print("Pero todavía no has ganado...")
+            print("¡Tienes que superar la PREGUNTA FINAL!")
+
+            categoria_final = random.choice(
+                list(categorias.values())
+            )
+
+            print("Categoría final:", categoria_final)
+
+            correcta = hacer_pregunta(
+                categoria_final,
+                preguntas_disponibles
+            )
+
+            if correcta:
+                print("\n¡ENHORABUENA,", jugador, "!")
+                print("¡HAS GANADO BIOTRIVIAL UAX!")
+                print("¡Tus neuronas merecen unas vacaciones!")
+                break
+
+            else:
+                print("\n¡Tan cerca y tan lejos!")
+                print("Tendrás otra oportunidad en tu próximo turno.")
+                turno = (turno + 1) % 2
+                continue
+
+        # Comprobar si se ha pasado de FINAL
+        if nueva_posicion == posicion_anterior:
+
+            print("¡Te has pasado de la casilla FINAL!")
+            print("Pierdes el turno.")
+
+            turno = (turno + 1) % 2
+            continue
+
+        # Actualizar posición
+        posiciones[turno] = nueva_posicion
+
+        print("Nueva posición:", nueva_posicion)
+
+        # Mostrar el tablero con las fichas actualizadas
+        mostrar_fichas(posiciones, jugadores)
+
+        # Obtener categoría de la casilla
+        color = tablero[nueva_posicion - 1]
+        categoria = categorias[color]
+
+        print("Color:", color)
+        print("Categoría:", categoria)
+
+        # Hacer pregunta
+        correcta = hacer_pregunta(
+            categoria,
+            preguntas_disponibles
+        )
+
+        if correcta:
+            print("¡Puedes volver a tirar!")
+
+        else:
+            print("Turno del siguiente jugador.")
+            turno = (turno + 1) % 2
+
+    print("\nFIN DE LA PARTIDA")
+    print("¡Gracias por jugar a BioTrivial UAX!")
+
+jugar()
